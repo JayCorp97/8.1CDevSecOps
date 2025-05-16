@@ -4,13 +4,12 @@ pipeline {
     stages {
         stage('Clone Repository') {
             steps {
-                git 'https://github.com/<your-username>/8.2CDevSecOps.git'
+                git 'https://github.com/JayCorp97/8.1CDevSecOps.git'
             }
         }
 
         stage('Install Dependencies') {
             steps {
-                // Windows: use bat | Linux/Mac: use sh
                 bat 'npm install'
             }
         }
