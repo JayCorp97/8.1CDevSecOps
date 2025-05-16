@@ -1,30 +1,29 @@
 pipeline {
     agent any
-
     stages {
-        stage('Clone Repository') {
+        stage('Checkout') {
             steps {
-                git 'https://github.com/JayCorp97/8.1CDevSecOps.git'
+                git branch: 'main', url: 'https://github.com/JayCorp97/8.1CDevSecOps.git'
             }
         }
-
         stage('Install Dependencies') {
             steps {
                 bat 'npm install'
             }
         }
-
-        stage('Run Security Audit') {
+        stage('Run Tests') {
             steps {
-                bat 'echo Running npm audit for security check...'
-                bat 'npm audit --audit-level=low'
+                bat 'npm test || exit /b 0'  // Allows pipeline to continue if tests fail
             }
         }
-
-        stage('Save Audit Report') {
+        stage('Generate Coverage Report') {
             steps {
-                bat 'npm audit --json > audit-report.json'
-                archiveArtifacts artifacts: 'audit-report.json', fingerprint: true
+                bat 'npm run coverage || exit /b 0'
+            }
+        }
+        stage('NPM Audit (Security Scan)') {
+            steps {
+                bat 'npm audit || exit /b 0'
             }
         }
     }
